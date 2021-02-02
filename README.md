@@ -12,8 +12,8 @@ These script was built to download images from gee collection images considering
     - filter_field = 'id'     # insert name of atribute fild to filter shapefile
 
 ## Codes
-'''python
+```python
 git clone https://github.com/newmarwegner/autodowngee.git
 python -m venv .venv
 source autogee_ndvi/bin/activate
-'''
+```
