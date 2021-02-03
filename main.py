@@ -46,7 +46,7 @@ def download_ndvi(feature_name,box, start_date,end_date):
     has_folder(os.getcwd()+'/output/')
     out_dir = os.getcwd()+'/output/'+ str(feature_name)
     boundary = ee.Geometry.Polygon(box, None, False)
-    collection = ee.ImageCollection("LANDSAT/LE7_L1T_ANNUAL_NDVI") \
+    collection = ee.ImageCollection(path_collection) \
                  .filterDate(start_date,end_date)
 
     return geemap.ee_export_image_collection(collection,scale=30,crs='EPSG:4326',region=boundary, out_dir=out_dir)
@@ -110,6 +110,7 @@ if __name__ == '__main__':
     end_date='2001-04-25'
     filter_field = 'id'
     shapefile = 'limite_test.shp'
+    path_collection = "LANDSAT/LE7_L1T_ANNUAL_NDVI"
     
     initialize()
     polygons = open_shp(shapefile)
