@@ -15,8 +15,8 @@ def initialize():
     return
 
 # function to open a shapefile
-def open_shp():
-    path = os.getcwd()+'/dados/limite_test.shp'
+def open_shp(shapefile):
+    path = f'{os.getcwd()}/dados/{shapefile}'
 
     return gpd.read_file(path)
 
@@ -29,7 +29,7 @@ def has_folder(path):
 
 # create list by attributes of shapefile
 def get_class(filter_field):
-    polygons = open_shp()
+    polygons = open_shp(shapefile)
 
     return list(set([v[filter_field] for k,v in polygons.iterrows()]))
 
@@ -109,9 +109,10 @@ if __name__ == '__main__':
     start_date='1999-01-01'
     end_date='2001-04-25'
     filter_field = 'id'
+    shapefile = 'limite_test.shp'
     
     initialize()
-    polygons = open_shp()
+    polygons = open_shp(shapefile)
     feature_names = get_class(filter_field)
 
     for feature_name in feature_names:

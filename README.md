@@ -9,6 +9,7 @@ These script was built to download images from gee collection images considering
 4. Config parameters in main.py code
     - start_date='1999-01-01' # insert initial date
     - end_date='2001-04-25'   # insert end date
+    - shapefile = 'limite_test.shp' # insert name of shapefile in dados folder
     - filter_field = 'id'     # insert name of atribute field to filter shapefile
 
 ### Codes
