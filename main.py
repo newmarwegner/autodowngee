@@ -5,7 +5,7 @@ import geopandas as gpd
 import os
 import rasterio
 from rasterio.merge import merge
-
+import shutil
 
 # function to initialize gee
 def initialize():
@@ -20,7 +20,14 @@ def open_shp():
 
     return gpd.read_file(path)
 
-# create list by atributes of shapefile
+# function to verify if has folder and create if not
+def has_folder(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    return
+
+# create list by attributes of shapefile
 def get_class(filter_field):
     polygons = open_shp()
 
@@ -36,9 +43,8 @@ def filter_polygon(filter_field, feature_name, polygons):
 
 # function to download gee
 def download_ndvi(feature_name,box, start_date,end_date):
-
+    has_folder(os.getcwd()+'/output/')
     out_dir = os.getcwd()+'/output/'+ str(feature_name)
-    print(out_dir)
     boundary = ee.Geometry.Polygon(box, None, False)
     collection = ee.ImageCollection("LANDSAT/LE7_L1T_ANNUAL_NDVI") \
                  .filterDate(start_date,end_date)
@@ -68,7 +74,7 @@ def grouppath_mosaic(paths_to_mosaic):
 
 # function to mosaic
 def create_mosaic(path_groups):
-
+    has_folder(os.getcwd()+'/merged/')
     for i in path_groups:
         ano = i[0][-8:-4]
         src_files_to_mosaic = []
@@ -79,7 +85,6 @@ def create_mosaic(path_groups):
             src_files_to_mosaic.append(src)
             out_meta = src.meta.copy()
 
-
         mosaic, out_trans = merge(src_files_to_mosaic)
         out_meta.update({"driver": "GTiff",
                          "height": mosaic.shape[1],
@@ -88,13 +93,23 @@ def create_mosaic(path_groups):
                          "crs": "+proj=longlat +datum=WGS84 +no_defs"
                          }
         )
-        with rasterio.open(f'{os.getcwd()}/output/merged/{ano}.tif',"w",**out_meta) as dest:
+        with rasterio.open(f'{os.getcwd()}/merged/{ano}.tif',"w",**out_meta) as dest:
             dest.write(mosaic)
-
+       
     return
 
-# function to run program
-def run():
+# function to remove folders not merged
+def remove_not_merged():
+    
+    return shutil.rmtree(f'{os.getcwd()}/output')
+
+# Run program
+if __name__ == '__main__':
+    
+    start_date='1999-01-01'
+    end_date='2001-04-25'
+    filter_field = 'id'
+    
     initialize()
     polygons = open_shp()
     feature_names = get_class(filter_field)
@@ -106,10 +121,9 @@ def run():
     list_to_mosaic = output_paths()
     path_groups = grouppath_mosaic(list_to_mosaic)
     create_mosaic(path_groups)
-    return
+    remove_not_merged()
+ 
 
-start_date='1999-01-01'
-end_date='2001-04-25'
-filter_field = 'id'
-run()
+
+
 
