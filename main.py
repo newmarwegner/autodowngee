@@ -96,7 +96,7 @@ def create_mosaic(path_groups):
         )
         with rasterio.open(f'{os.getcwd()}/merged/{count}_{ano}.tif',"w",**out_meta) as dest:
             dest.write(mosaic)
-        count +=1
+        count += 1
     return
 
 # function to remove folders not merged
