@@ -79,6 +79,7 @@ def create_mosaic(path_groups):
         ano = i[0][-8:-4]
         src_files_to_mosaic = []
         out_meta = []
+        count = 0
         for file in i:
             full = ''.join([file[:file.rfind('/')+1],file[file.rfind('_')+1:]])
             src = rasterio.open(full)
@@ -93,9 +94,9 @@ def create_mosaic(path_groups):
                          "crs": "+proj=longlat +datum=WGS84 +no_defs"
                          }
         )
-        with rasterio.open(f'{os.getcwd()}/merged/{ano}.tif',"w",**out_meta) as dest:
+        with rasterio.open(f'{os.getcwd()}/merged/{count}_{ano}.tif',"w",**out_meta) as dest:
             dest.write(mosaic)
-       
+        count +=1
     return
 
 # function to remove folders not merged
